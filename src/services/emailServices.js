@@ -8,8 +8,8 @@ const SendMail = (toUser, otp) => {
         port: 465,
         secure: true,
         auth: {
-          user: "development@appstirr.com", // Your email id
-          pass: "Wg@rW6#@Z&", // Your password
+          user: "", // Your email id
+          pass: "", // Your password
         },
     })
 
