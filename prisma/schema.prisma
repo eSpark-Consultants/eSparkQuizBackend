@@ -59,8 +59,9 @@ model OrderItems {
   itemId    Int
   Item      Item     @relation(fields: [itemId], references: [id])
   orderId   Int
-  Order     Order[]
+  Order     Order    @relation(fields: [orderId], references: [id])
   quantity  Int
+  amount    Float
   note      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,8 +69,8 @@ model OrderItems {
 
 model Order {
   id              Int          @id @default(autoincrement())
-  totalAmount     Int
-  items           OrderItems[]
+  totalAmount     Float
+  Items           OrderItems[]
   userId          Int
   paidAmount      Int          @default(0)
   remainingAmount Int          @default(0)

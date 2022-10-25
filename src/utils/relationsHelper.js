@@ -3,6 +3,12 @@ const relations = {
         return {
         };
     },
+    order(req = {}) {
+        return {
+            items: true,
+            User: true
+        }
+    }
 };
 
 
