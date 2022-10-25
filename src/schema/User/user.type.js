@@ -71,7 +71,7 @@ const User = gql`
 
     updateProfile(
       id: Int!
-      role: ROLES!
+      role: ROLES
       firstName: String
       lastName: String
       avatar: String

@@ -10,24 +10,26 @@ generator client {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String?   @unique
-  firstName   String?
-  lastName    String?
-  userName    String?
-  avatar      String?
-  dob         DateTime?
-  phoneNumber String?
-  country     String?
-  city        String?
-  role        ROLES     @default(USER)
-  password    String    @default("")
-  resetToken  String    @default("")
-  status      Boolean   @default(true)
-  isVerified  Boolean   @default(true)
-  fcmToken    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id            Int             @id @default(autoincrement())
+  email         String?         @unique
+  firstName     String?
+  lastName      String?
+  userName      String?
+  avatar        String?
+  dob           DateTime?
+  phoneNumber   String?
+  country       String?
+  city          String?
+  role          ROLES           @default(USER)
+  password      String          @default("")
+  resetToken    String          @default("")
+  status        Boolean         @default(true)
+  isVerified    Boolean         @default(true)
+  fcmToken      String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  FavoriteItems FavoriteItems[]
+  Order         Order[]
 }
 
 model Category {
@@ -42,6 +44,7 @@ model Category {
 model Item {
   id            Int             @id @default(autoincrement())
   name          String
+  image         String  
   price         Int
   categoryId    Int
   Category      Category        @relation(fields: [categoryId], references: [id])
@@ -68,12 +71,16 @@ model Order {
   items       OrderItems[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  userId      Int
+  User        User         @relation(fields: [userId], references: [id])
 }
 
 model FavoriteItems {
   id        Int      @id @default(autoincrement())
   itemId    Int
   Item      Item     @relation(fields: [itemId], references: [id])
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

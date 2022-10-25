@@ -174,9 +174,6 @@ const AuthServices = {
   async deleteUser(data) {
     const userExist = await prisma.user.findUnique({
       where: { id: data.id },
-      include: {
-        business: true,
-      },
     });
 
     console.log(userExist);
@@ -238,7 +235,6 @@ const AuthServices = {
           id: userExist.id,
         },
         data: seprateUserBusinessFields({ ...data })?.user,
-        include: relations.user(data),
       });
       if (data.type == "Business") {
         const res = await prisma.business.update({
@@ -253,120 +249,11 @@ const AuthServices = {
         where: {
           id: responseData?.id,
         },
-        include: relations.user(data),
       });
 
       return createResponse(updatedData, true, "Update Profile successfully!");
     } catch (error) {
       return createError(401, error);
-    }
-  },
-
-  async updateSettings(settings, id) {
-    const userExist = await prisma.user.findUnique({
-      where: { id: id },
-    });
-
-    if (!userExist) return createError("404", "User Not Found!");
-    try {
-      const responseData = await prisma.user.update({
-        where: {
-          id: userExist.id,
-        },
-        data: {
-          settings: settings,
-        },
-      });
-
-      const updatedData = await prisma.user.findUnique({
-        where: {
-          id: responseData?.id,
-        },
-        include: relations.user(settings),
-      });
-
-      return createResponse(updatedData, true, "Update Profile successfully!");
-    } catch (error) {
-      return createError(401, error);
-    }
-  },
-
-  async updateSocial(social, id) {
-    const userExist = await prisma.user.findUnique({
-      where: { id: id },
-    });
-
-    if (!userExist) return createError("404", "User Not Found!");
-    try {
-      const responseData = await prisma.user.update({
-        where: {
-          id: userExist.id,
-        },
-        data: {
-          social: social,
-        },
-      });
-
-      const updatedData = await prisma.user.findUnique({
-        where: {
-          id: responseData?.id,
-        },
-        include: relations.user(social),
-      });
-
-      return createResponse(updatedData, true, "Update Profile successfully!");
-    } catch (error) {
-      return createError(401, error);
-    }
-  },
-
-  async socialMediaLogin(data) {
-    try {
-      const isExist = await prisma.user.findFirst({
-        where: {
-          OR: [
-            {
-              email: data.email,
-            },
-            {
-              providerId: data.providerId,
-            },
-          ],
-        },
-      });
-      var response;
-      if (isExist) {
-        response = await prisma.user.update({
-          where: {
-            id: isExist.id,
-          },
-          data: data,
-        });
-      } else {
-        if (data.type == "Business") {
-          response = await prisma.user.create({
-            data: data,
-          });
-
-          const businessData = await prisma.business.create({
-            data: {
-              userId: response.id,
-              businessName: "",
-              status: true,
-              category: "1",
-              subCategory: "1",
-            },
-          });
-        } else {
-          response = await prisma.user.create({
-            data: data,
-          });
-        }
-      }
-
-      return createResponse(response, true, "login successfully");
-    } catch (error) {
-      return createError(500, error, false);
     }
   },
 
