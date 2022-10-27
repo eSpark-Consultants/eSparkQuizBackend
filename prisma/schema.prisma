@@ -70,7 +70,7 @@ model OrderItems {
 model Order {
   id              Int          @id @default(autoincrement())
   totalAmount     Float
-  Items           OrderItems[]
+  OrderItems           OrderItems[]
   userId          Int
   paidAmount      Int          @default(0)
   remainingAmount Int          @default(0)

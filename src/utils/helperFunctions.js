@@ -70,7 +70,6 @@ function returnAdminPagination(page, count, skip) {
     };
 }
 
-
 function mergePaginationRecord(data) {
     return data["0"] ? { pagination: data["0"], ...data } : data;
 }
@@ -106,6 +105,19 @@ function customString(length = 8) {
 
     return text;
 }
+
+function getPreviousDay(date = new Date()) {
+    const previous = new Date(date.getTime());
+    previous.setDate(date.getDate() - 1);
+    return previous;
+}
+
+function getNextDay(date = new Date()) {
+    const next = new Date(date.getTime());
+    next.setDate(date.getDate() + 1);
+    return next;
+}
+
 module.exports = {
     createResponse,
     createError,
@@ -117,4 +129,6 @@ module.exports = {
     customString,
     returnAdminPagination,
     requestAdminPagination,
+    getPreviousDay,
+    getNextDay
 };

@@ -13,12 +13,13 @@ const Order = gql`
     remainingAmount: Int
     createdAt: Date
     updatedAt: Date
-    Items: [OrderItems]
+    OrderItems: [OrderItems]
   }
 
-  enum ORDER_STATUS {
-    PAID
-    UNPAID
+  type OrderSummary {
+    item: Item
+    itemId: Int
+    quantity: Int
   }
 
   type OrderItems {
@@ -28,7 +29,7 @@ const Order = gql`
     Order: Order
     quantity: Int
     amount: Float
-    Items: Item
+    Item: Item
     note: String
     createdAt: Date
     updatedAt: Date
@@ -47,6 +48,12 @@ const Order = gql`
     data: [Order]
   }
 
+  type OrderSummaryArrayResponse {
+    status: Boolean
+    message: String
+    data: [OrderSummary]
+  }
+
   input OrderInput {
     userId: Int
     totalAmount: Float
@@ -61,15 +68,28 @@ const Order = gql`
   }
   input GetOrderInput {
     userId: Int
+    createdAt: Date
+    status: ORDER_STATUS
   }
   type Query {
     getAllOrders(GetOrderInput: GetOrderInput): OrderArrayResponse
     getOrderById(id: Int!): OrderResponse
+    getCurrentRemainingAmount: OrderResponse
+    getOrderSummary(date: Date): OrderSummaryArrayResponse
   }
 
   type Mutation {
     createOrder(input: OrderInput!): OrderResponse
-    updateOrder(id: Int!, status: ORDER_STATUS!, paidAmount: Int!): OrderResponse
+    updateOrder(
+      id: Int!
+      status: ORDER_STATUS!
+      paidAmount: Int!
+    ): OrderResponse
+  }
+
+  enum ORDER_STATUS {
+    PAID
+    UNPAID
   }
 `;
 

@@ -1,7 +1,11 @@
+const { gt } = require("lodash");
 const { prisma } = require("../database");
-const { createError, createResponse } = require("../utils/helperFunctions");
-const crypto = require("crypto");
-const { relations } = require("../utils/relationsHelper");
+const {
+  createError,
+  createResponse,
+  getNextDay,
+  getPreviousDay,
+} = require("../utils/helperFunctions");
 
 const OrderService = {
   async createOrderWithItems(data) {
@@ -40,7 +44,7 @@ const OrderService = {
       },
     });
     if (!isOrder) return createError(400, "User not found!");
-    data['remainingAmount'] = data?.paidAmount - isOrder.totalAmount
+    data["remainingAmount"] = data?.paidAmount - isOrder.totalAmount;
     try {
       const result = await prisma.order.update({
         where: {
@@ -52,6 +56,66 @@ const OrderService = {
     } catch (error) {
       console.log(error);
       return createError(401, error);
+    }
+  },
+
+  async getCurrentRemainingAmount(data) {
+    const isRemainingAmount = await prisma.order.findFirst({
+      where: {
+        createdAt: {
+          lt: getNextDay(),
+          gt: getPreviousDay(),
+        },
+        remainingAmount: {
+          gt: 0,
+        },
+      },
+    });
+    if (!isRemainingAmount) return createError(400, "All Clear for today!");
+    return createResponse(
+      isRemainingAmount,
+      true,
+      "Today Remaining Amount Order"
+    );
+  },
+
+  async getOrderSummary(data) {
+    try {
+      const order = await prisma.orderItems.groupBy({
+        by: ["itemId"],
+        where: {
+          createdAt: {
+            lt: getNextDay(),
+            gt: getPreviousDay(),
+          },
+        },
+        _sum: {
+          quantity: true,
+        },
+      });
+      if (order?.length > 0) {
+        for (let index = 0; index < order.length; index++) {
+          const orderItem = order[index];
+          const item = await prisma.item.findUnique({
+            where: {
+              id: orderItem.itemId,
+            },
+            include: {
+              Category: true, 
+            }
+          });
+          orderItem['item'] = item
+          orderItem['quantity'] = orderItem._sum.quantity
+          delete orderItem['_sum']
+        }
+      }
+      return createResponse(
+        order,
+        true,
+        "Order Summary"
+      );
+    } catch (error) {
+      console.log("getOrderSummary error", error);
     }
   },
 };
