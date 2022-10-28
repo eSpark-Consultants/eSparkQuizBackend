@@ -48,7 +48,7 @@ const AuthServices = {
     });
 
     if (!userExist) return createError("404", "User Not Found!");
-
+    if(!userExist.status) return createError("404", "Your account is deactivated please contact the administrator");
     const checkPassword = bcrypt.compareSync(data.password, userExist.password);
     if (!checkPassword) return createError("401", "Email/Password incorrect");
 
