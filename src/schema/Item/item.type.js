@@ -36,6 +36,7 @@ const Item = gql`
   type Query {
     getAllItems(where: where): ItemArrayResponse
     getItemById(id: Int!): ItemResponse
+    searchItem(text: String): ItemArrayResponse
   }
 
   type Mutation {

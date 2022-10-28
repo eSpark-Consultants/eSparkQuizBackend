@@ -80,19 +80,34 @@ const OrderService = {
   },
 
   async getOrderSummary(data) {
+    console.log("getOrderSummary", data);
     try {
       const order = await prisma.orderItems.groupBy({
         by: ["itemId"],
         where: {
           createdAt: {
-            lt: getNextDay(),
-            gt: getPreviousDay(),
+            lt: getNextDay(new Date(data.date || new Date())),
+            gt: getPreviousDay(new Date(data.date || new Date())),
           },
         },
         _sum: {
           quantity: true,
+          amount: true
         },
       });
+
+      const totalAmount = await prisma.order.aggregate({
+        where: {
+          createdAt: {
+            lt: getNextDay(new Date(data.date || new Date())),
+            gt: getPreviousDay(new Date(data.date || new Date())),
+          },
+        },
+        _sum: {
+          totalAmount: true
+        }
+      })
+      console.log("totalAmount", totalAmount)
       if (order?.length > 0) {
         for (let index = 0; index < order.length; index++) {
           const orderItem = order[index];
@@ -106,14 +121,17 @@ const OrderService = {
           });
           orderItem['item'] = item
           orderItem['quantity'] = orderItem._sum.quantity
+          orderItem['amount'] = orderItem._sum.amount
           delete orderItem['_sum']
         }
       }
-      return createResponse(
+      var obj = createResponse(
         order,
         true,
         "Order Summary"
       );
+      obj['totalAmount'] = totalAmount._sum.totalAmount
+      return obj;
     } catch (error) {
       console.log("getOrderSummary error", error);
     }

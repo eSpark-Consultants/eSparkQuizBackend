@@ -31,10 +31,15 @@ const User = gql`
     error: String
   }
 
+  type AlphabeticalResponse {
+    alphabet: String
+    record: [User]
+  }
+  
   type UserArrayResponse {
     status: Boolean
     message: String
-    data: [User]
+    data: [AlphabeticalResponse]
   }
 
   type Query {
@@ -45,9 +50,11 @@ const User = gql`
 
   type Mutation {
     createUser(
+      firstName: String!
+      lastName: String!
       email: String!
-      password: String!
-      role: ROLES
+      password: String
+      role: ROLES!
       fcmToken: String
     ): UserResponse
 

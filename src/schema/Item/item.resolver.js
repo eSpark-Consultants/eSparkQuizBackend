@@ -21,6 +21,15 @@ const ItemResolver = {
         return createError(401, error);
       }
     },
+
+    searchItem: async (args, req, context) => {
+      try {
+        const responseData = await ItemServices.searchItem(req);
+        return responseData;
+      } catch (error) {
+        return createError(401, error);
+      }
+    },
   },
   Mutation: {
     addNewItem: async (args, req, context) => {

@@ -90,6 +90,18 @@ const ItemServices = {
       return createError(401, error);
     }
   },
+
+  async searchItem (data) {
+    const items = await prisma.item.findMany({
+      where: {
+        name: {
+          contains: data?.text,
+          mode: 'insensitive'
+        },
+      }
+    })
+    return createResponse(items, true, items?.length > 0 ? `Items that contains ${data?.text}` : 'Item Not Found!');
+  }
 };
 
 module.exports = ItemServices;

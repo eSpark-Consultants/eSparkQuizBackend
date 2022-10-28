@@ -20,6 +20,7 @@ const Order = gql`
     item: Item
     itemId: Int
     quantity: Int
+    amount: Int
   }
 
   type OrderItems {
@@ -52,6 +53,7 @@ const Order = gql`
     status: Boolean
     message: String
     data: [OrderSummary]
+    totalAmount: Int
   }
 
   input OrderInput {

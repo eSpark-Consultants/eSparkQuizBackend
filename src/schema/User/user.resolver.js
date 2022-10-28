@@ -1,6 +1,6 @@
 const { prisma } = require("../../database");
 const AuthServices = require("../../services/authServices");
-const { createResponse } = require("../../utils/helperFunctions");
+const { createResponse, sortAlphebetically } = require("../../utils/helperFunctions");
 
 const UserResolver = {
   Query: {
@@ -10,7 +10,7 @@ const UserResolver = {
     },
     getAllUsers: async (args, req, context) => {
       const response = await prisma.user.findMany();
-      return createResponse(response, true, "All users");
+      return createResponse(sortAlphebetically(response), true, "All users");
     },
     getUserById: async (args, req, context) => {
       const response = await prisma.user.findUnique({
@@ -19,8 +19,6 @@ const UserResolver = {
         }
         // include : relations.user()
       });
-
-      console.log(response);
       return createResponse(response, true, "User");
     },
   },
