@@ -13,8 +13,8 @@ const SendMail = (toUser, user) => {
     port: 465,
     debug: true,
     auth: {
-      user: "mraza@esparkconsultants.com", //"4e4c0b32d63976",
-      pass: "Mudassir@eSpark", //"5fa31bb53598d2"
+      user: process.env.MAIL_EMAIL, //"4e4c0b32d63976",
+      pass: process.env.MAIL_PASSWORD, //"5fa31bb53598d2"
     },
   });
 
@@ -25,7 +25,7 @@ const SendMail = (toUser, user) => {
     html: `<div>
         <p>Respected ${user?.name}<br/>
         <p>Welcome to eSpark Lunch App <br/>
-            Your account is created for using <b>eSpark Lunch Application</b> for login use below cre   dentials. 
+            Your account is created for using <b>eSpark Lunch Application</b> for login use below credentials. 
             <br/><br/>
             <b> Email: ${user?.email}, <br/> Password: ${user?.password} </b>
         </p>
