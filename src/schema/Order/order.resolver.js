@@ -8,8 +8,8 @@ const orderResolver = {
     getAllOrders: async (args, req, context) => {
       if (req?.GetOrderInput?.createdAt) {
         req.GetOrderInput.createdAt = {
-          lt: getNextDay(new Date(req.GetOrderInput.createdAt)),
-          gt: getPreviousDay(new Date(req.GetOrderInput.createdAt)),
+          lte: getNextDay(new Date(req.GetOrderInput.createdAt)), 
+          gt: new Date(req.GetOrderInput.createdAt),
         };
       }
       const response = await prisma.order.findMany({
@@ -43,6 +43,10 @@ const orderResolver = {
 
     getOrderSummary: async (args, req, context) => {
       const response = await OrderService.getOrderSummary(req);
+      return response;
+    },
+    getOrderOverviewByDate: async (args, req, context) => {
+      const response = await OrderService.getOrderOverviewByDate(req);
       return response;
     },
   },

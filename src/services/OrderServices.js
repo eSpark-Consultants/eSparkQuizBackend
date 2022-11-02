@@ -89,6 +89,9 @@ const OrderService = {
             lt: getNextDay(new Date(data.date || new Date())),
             gt: getPreviousDay(new Date(data.date || new Date())),
           },
+          // Order: {
+          //   status: 'PAID'
+          // }
         },
         _sum: {
           quantity: true,
@@ -102,12 +105,12 @@ const OrderService = {
             lt: getNextDay(new Date(data.date || new Date())),
             gt: getPreviousDay(new Date(data.date || new Date())),
           },
+          // status: 'PAID'
         },
         _sum: {
           totalAmount: true
         }
       })
-      console.log("totalAmount", totalAmount)
       if (order?.length > 0) {
         for (let index = 0; index < order.length; index++) {
           const orderItem = order[index];
@@ -136,6 +139,51 @@ const OrderService = {
       console.log("getOrderSummary error", error);
     }
   },
+
+  async getOrderOverviewByDate(data) {
+    const order = await prisma.order.groupBy({
+      by: ['createdAt'],
+      where: {
+        createdAt: {
+          gte: new Date(data.startDate || new Date()),
+          lte: new Date(data.endDate || new Date()),
+        },
+      },
+      _count: {
+        id: true,
+      },
+      _sum: {
+        totalAmount: true
+      }
+    })
+    if (order?.length > 0) { 
+      for(var i = 0; i < order?.length; i++) {
+        const rider = await prisma.order.findFirst({
+          where: {
+            createdAt: order[i].createdAt,
+            riderId: {
+               not: 0
+            }
+          },
+          include: {
+            User: true,
+            Rider: true
+          }
+        })
+        order[i].rider= rider?.Rider || null
+        order[i].totalOrders = order[i]._count.id
+        order[i].totalAmount = order[i]._sum.totalAmount
+        delete order[i]._count
+        delete order[i]._sum
+      } 
+    }
+    console.log("getOrderOverviewByDate", order)
+    return createResponse(
+      order,
+      true,
+      "Order Overview Response"
+    )
+  }
 };
 
 module.exports = OrderService;

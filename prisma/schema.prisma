@@ -29,7 +29,8 @@ model User {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   FavoriteItems FavoriteItems[]
-  Order         Order[]
+  Orders        Order[]         @relation("UserOrder")
+  RiderOrder    Order[]         @relation("RiderOrder")
 }
 
 model Category {
@@ -70,11 +71,13 @@ model OrderItems {
 model Order {
   id              Int          @id @default(autoincrement())
   totalAmount     Float
-  OrderItems           OrderItems[]
-  userId          Int
+  OrderItems      OrderItems[]
   paidAmount      Int          @default(0)
   remainingAmount Int          @default(0)
-  User            User         @relation(fields: [userId], references: [id])
+  userId          Int
+  User            User         @relation("UserOrder", fields: [userId], references: [id])
+  riderId         Int?
+  Rider           User?        @relation(name: "RiderOrder", fields: [riderId], references: [id])
   status          ORDER_STATUS @default(UNPAID)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt

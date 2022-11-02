@@ -36,6 +36,13 @@ const Order = gql`
     updatedAt: Date
   }
 
+  type OrderOverview {
+    createdAt: Date
+    rider: User
+    totalOrders: Int
+    totalAmount: Int
+  }
+
   type OrderResponse {
     status: Boolean
     message: String
@@ -54,6 +61,12 @@ const Order = gql`
     message: String
     data: [OrderSummary]
     totalAmount: Int
+  }
+
+  type OrderOverviewArrayResponse {
+    status: Boolean
+    message: String
+    data: [OrderOverview]
   }
 
   input OrderInput {
@@ -78,6 +91,7 @@ const Order = gql`
     getOrderById(id: Int!): OrderResponse
     getCurrentRemainingAmount: OrderResponse
     getOrderSummary(date: Date): OrderSummaryArrayResponse
+    getOrderOverviewByDate(startDate: Date!, endDate: Date!): OrderOverviewArrayResponse
   }
 
   type Mutation {
@@ -86,6 +100,7 @@ const Order = gql`
       id: Int!
       status: ORDER_STATUS!
       paidAmount: Int!
+      riderId: Int!
     ): OrderResponse
   }
 
