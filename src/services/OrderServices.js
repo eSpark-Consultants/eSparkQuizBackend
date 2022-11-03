@@ -1,4 +1,3 @@
-const { gt } = require("lodash");
 const { prisma } = require("../database");
 const {
   createError,
@@ -38,24 +37,30 @@ const OrderService = {
   },
 
   async updateOrder(data) {
-    const isOrder = await prisma.order.findUnique({
-      where: {
-        id: data.id,
-      },
-    });
-    if (!isOrder) return createError(400, "User not found!");
-    data["remainingAmount"] = data?.paidAmount - isOrder.totalAmount;
-    try {
-      const result = await prisma.order.update({
-        where: {
-          id: data.id,
-        },
-        data: data,
-      });
-      return createResponse(result, true, "Order Updated Successfully");
-    } catch (error) {
-      console.log(error);
-      return createError(401, error);
+    if(data?.input?.length > 0) {
+      const inputs = data?.input
+      for (let index = 0; index < inputs?.length; index++) {
+        const isOrder = await prisma.order.findUnique({
+          where: {
+            id: inputs[index].id,
+          },
+        });
+        inputs[index]["remainingAmount"] = inputs[index]?.paidAmount - isOrder.totalAmount;
+        try {
+          const result = await prisma.order.update({
+            where: {
+              id: inputs[index].id,
+            },
+            data: inputs[index],
+          });
+        } catch (error) {
+          console.log(error);
+          return createError(401, error);
+        }
+      }
+      return createResponse({}, true, "Order Updated Successfully");
+    }else {
+      return createError(400, "Bad input");
     }
   },
 

@@ -86,6 +86,13 @@ const Order = gql`
     createdAt: Date
     status: ORDER_STATUS
   }
+
+  input updateOrderInput {
+      id: Int!
+      status: ORDER_STATUS!
+      paidAmount: Int!
+      riderId: Int!
+  }
   type Query {
     getAllOrders(GetOrderInput: GetOrderInput): OrderArrayResponse
     getOrderById(id: Int!): OrderResponse
@@ -96,12 +103,7 @@ const Order = gql`
 
   type Mutation {
     createOrder(input: OrderInput!): OrderResponse
-    updateOrder(
-      id: Int!
-      status: ORDER_STATUS!
-      paidAmount: Int!
-      riderId: Int!
-    ): OrderResponse
+    updateOrder(input: [updateOrderInput]): OrderResponse
   }
 
   enum ORDER_STATUS {
