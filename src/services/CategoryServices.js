@@ -9,7 +9,11 @@ const { createError, createResponse } = require("../utils/helperFunctions.js");
 const CategoryServices = {
   async getAllCategories() {
     try {
-      const responseData = await prisma.category.findMany();
+      const responseData = await prisma.category.findMany({
+        include: {
+          Item: true
+        }
+      });
       return createResponse(responseData, true, "All Categories");
     } catch (error) {
       return createError(401, error);
@@ -20,6 +24,9 @@ const CategoryServices = {
     try {
       const responseData = await prisma.category.findUnique({
         where: { id: data.id },
+        include: {
+          Item: true
+        }
       });
 
       return createResponse(responseData, true, "Category By Id");
