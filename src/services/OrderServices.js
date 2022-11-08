@@ -1,3 +1,4 @@
+const moment = require("moment/moment");
 const { prisma } = require("../database");
 const {
   createError,
@@ -14,11 +15,20 @@ const OrderService = {
     });
     if (!userExist) return createError(400, "User not found!");
     try {
+      const isTodaysOrder = await prisma.order.findFirst({
+        where: {
+          createdAt: {
+            lte: getNextDay(new Date(moment(new Date()).format('YYYY-MM-DD'))).toISOString(), 
+            gt: new Date(moment(new Date()).format('YYYY-MM-DD')).toISOString(),
+          },
+          userId: details.userId
+        }
+      })
+     if(!isTodaysOrder) {
       const response = await prisma.order.create({
         data: details,
       });
       for (let index = 0; index < items.length; index++) {
-        console.log("ORDER DATA", details, items[index]);
         const item = await prisma?.item.findUnique({
           where: { id: items[index]?.itemId },
         });
@@ -30,6 +40,26 @@ const OrderService = {
         }
       }
       return createResponse(response, true, "Order Created Successfully");
+     }else {
+      for (let index = 0; index < items.length; index++) {
+        const item = await prisma?.item.findUnique({
+          where: { id: items[index]?.itemId },
+        });
+        items[index]["orderId"] = isTodaysOrder.id;
+        if (item?.id) {
+          await prisma.orderItems.create({
+            data: items[index],
+          });
+        }
+      }
+      const updateOrder = await prisma.order.update({
+        where: {
+          id: isTodaysOrder.id,
+        },
+        data: {totalAmount: isTodaysOrder.totalAmount + details.totalAmount}
+      })
+      return createResponse(updateOrder, true, "Order Created Successfully");
+     }
     } catch (error) {
       console.log(error);
       return createError(401, error);
