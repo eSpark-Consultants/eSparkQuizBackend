@@ -13,7 +13,7 @@ CREATE TABLE "User" (
     "phoneNumber" TEXT,
     "country" TEXT,
     "city" TEXT,
-    "role" "ROLES" NOT NULL DEFAULT E'USER',
+    "role" "ROLES"[] NOT NULL,
     "password" TEXT NOT NULL DEFAULT E'',
     "resetToken" TEXT NOT NULL DEFAULT E'',
     "status" BOOLEAN NOT NULL DEFAULT true,

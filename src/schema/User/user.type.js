@@ -14,7 +14,7 @@ const User = gql`
     phoneNumber: String
     country: String
     city: String
-    role: ROLES
+    role: [ROLES!]!
     password: String
     resetToken: String
     status: Boolean
@@ -54,11 +54,11 @@ const User = gql`
       lastName: String!
       email: String!
       password: String
-      role: ROLES!
+      role: [ROLES!]!
       fcmToken: String
     ): UserResponse
 
-    forgotPassword(email: String!, role: ROLES!): UserResponse
+    forgotPassword(email: String!, role: [ROLES!]!): UserResponse
 
     changePassword(
       id: Int!
@@ -78,7 +78,7 @@ const User = gql`
 
     updateProfile(
       id: Int!
-      role: ROLES
+      role: [ROLES!]
       firstName: String
       lastName: String
       avatar: String

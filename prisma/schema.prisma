@@ -20,7 +20,7 @@ model User {
   phoneNumber   String?
   country       String?
   city          String?
-  role          ROLES           @default(USER)
+  role          ROLES[]         
   password      String          @default("")
   resetToken    String          @default("")
   status        Boolean         @default(true)
