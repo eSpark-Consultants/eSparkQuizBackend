@@ -18,8 +18,9 @@ const SendMail = (toUser, user) => {
     },
   });
 
+  let from = `eSpark Lunch Department <lunchdepartment@esparkconsultants.com>`
   message = {
-    from: "mraza@esparkconsultants.com",
+    from: from,
     to: toUser,
     subject: "Account For eSpark Lunch App",
     html: `<div>
