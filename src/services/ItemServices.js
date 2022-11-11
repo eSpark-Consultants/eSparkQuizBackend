@@ -10,7 +10,10 @@ const ItemServices = {
   async getAllItems(data) {
     try {
       const responseData = await prisma.item.findMany({
-        where: data?.where
+        where: data?.where,
+        include: {
+          Category: true,
+        }
       });
       return createResponse(responseData, true, "All Items");
     } catch (error) {
