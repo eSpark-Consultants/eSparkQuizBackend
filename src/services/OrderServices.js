@@ -104,6 +104,7 @@ const OrderService = {
         remainingAmount: {
           gt: 0,
         },
+        userId: data?.userId
       },
     });
     if (!isRemainingAmount) return createError(400, "All Clear for today!");

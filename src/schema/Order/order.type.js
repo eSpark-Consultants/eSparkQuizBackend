@@ -96,7 +96,7 @@ const Order = gql`
   type Query {
     getAllOrders(GetOrderInput: GetOrderInput): OrderArrayResponse
     getOrderById(id: Int!): OrderResponse
-    getCurrentRemainingAmount: OrderResponse
+    getCurrentRemainingAmount(userId: Int!): OrderResponse
     getOrderSummary(date: Date): OrderSummaryArrayResponse
     getOrderOverviewByDate(startDate: Date!, endDate: Date!): OrderOverviewArrayResponse
   }
