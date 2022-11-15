@@ -174,12 +174,6 @@ const AuthServices = {
     if (!userExist) return createError("404", "User Not Found!");
 
     try {
-      const businessData = await prisma.business.delete({
-        where: {
-          id: userExist.business.id,
-        },
-      });
-
       const responseData = await prisma.user.delete({
         where: {
           id: data.id,
@@ -187,7 +181,7 @@ const AuthServices = {
       });
 
       const users = await prisma.user.findMany();
-      return createResponse(sortAlphebetically(response), true, "User deleted successfully1");
+      return createResponse(sortAlphebetically(users), true, "User deleted successfully1");
     } catch (error) {
       return createError(401, error);
     }
