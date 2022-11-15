@@ -42,8 +42,12 @@ const User = gql`
     data: [AlphabeticalResponse]
   }
 
+  input Input {
+    role: ROLES
+    status: Boolean
+  }
   type Query {
-    getAllUsers: UserArrayResponse
+    getAllUsers(where: Input): UserArrayResponse
     loginUser(email: String, password: String, fcmToken: String): UserResponse
     getUserById(id: Int): UserResponse
   }

@@ -93,22 +93,28 @@ const Order = gql`
       paidAmount: Int!
       riderId: Int!
   }
+
   type Query {
     getAllOrders(GetOrderInput: GetOrderInput): OrderArrayResponse
     getOrderById(id: Int!): OrderResponse
     getCurrentRemainingAmount(userId: Int!): OrderResponse
     getOrderSummary(date: Date): OrderSummaryArrayResponse
     getOrderOverviewByDate(startDate: Date!, endDate: Date!): OrderOverviewArrayResponse
+    orderPurchased: OrderResponse
   }
 
   type Mutation {
     createOrder(input: OrderInput!): OrderResponse
-    updateOrder(input: [updateOrderInput]): OrderResponse
+    updateOrder(input: [updateOrderInput], type: ORDER_UPDATE): OrderResponse
   }
 
   enum ORDER_STATUS {
     PAID
     UNPAID
+  }
+
+  enum ORDER_UPDATE {
+    RETURN
   }
 `;
 

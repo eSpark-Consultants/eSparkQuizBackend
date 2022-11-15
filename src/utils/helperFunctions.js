@@ -1,3 +1,5 @@
+const { prisma } = require("../database");
+
 const createResponse = (
   data = null,
   status = true,
@@ -131,7 +133,6 @@ function genPassword() {
 }
 
 function sortAlphebetically (users) {
-    console.log("response", users)
     let data = users.reduce((r, e) => {
  
         // get first letter of name of current element
@@ -150,6 +151,19 @@ function sortAlphebetically (users) {
       let result = Object.values(data);
       return result
 }
+
+async function getUserFcmTokens() {
+  const users = await prisma.user.findMany({
+    where: {
+      fcmToken: { not: "" },
+    },
+    select: {
+      fcmToken: true,
+    },
+  });
+  const tokens = users.map((val) => val?.fcmToken);
+  return tokens
+}
 module.exports = {
   createResponse,
   createError,
@@ -164,5 +178,6 @@ module.exports = {
   getPreviousDay,
   getNextDay,
   genPassword,
-  sortAlphebetically
+  sortAlphebetically,
+  getUserFcmTokens
 };

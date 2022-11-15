@@ -1,6 +1,11 @@
 const { prisma } = require("../../database");
 const OrderService = require("../../services/OrderServices");
-const { createResponse, createError, getNextDay, getPreviousDay } = require("../../utils/helperFunctions");
+const {
+  createResponse,
+  createError,
+  getNextDay,
+  getPreviousDay,
+} = require("../../utils/helperFunctions");
 const { relations } = require("../../utils/relationsHelper");
 
 const orderResolver = {
@@ -8,7 +13,7 @@ const orderResolver = {
     getAllOrders: async (args, req, context) => {
       if (req?.GetOrderInput?.createdAt) {
         req.GetOrderInput.createdAt = {
-          lte: getNextDay(new Date(req.GetOrderInput.createdAt)), 
+          lte: getNextDay(new Date(req.GetOrderInput.createdAt)),
           gt: new Date(req.GetOrderInput.createdAt),
         };
       }
@@ -18,8 +23,8 @@ const orderResolver = {
           OrderItems: {
             include: {
               Item: true,
-            }
-          }
+            },
+          },
         }, //relations.order(),
         where: req ? req?.GetOrderInput : {},
       });
@@ -47,6 +52,10 @@ const orderResolver = {
     },
     getOrderOverviewByDate: async (args, req, context) => {
       const response = await OrderService.getOrderOverviewByDate(req);
+      return response;
+    },
+    orderPurchased: async (args, req, context) => {
+      const response = await OrderService.orderPurchased(req);
       return response;
     },
   },
