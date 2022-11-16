@@ -148,8 +148,15 @@ const OrderService = {
         by: ["itemId"],
         where: {
           createdAt: {
-            lt: getNextDay(new Date(data.date || new Date())),
-            gt: getPreviousDay(new Date(data.date || new Date())),
+            // lte: getNextDay(new Date(new Date(data.date || new Date()).setHours(24))),
+            // gte: getPreviousDay(new Date(new Date(data.date || new Date().setHours(0)))),
+            lte: getNextDay(new Date(data.date)),
+            gt: new Date(data.date),
+          },
+          Order: {
+            riderId: {
+              not: 0,
+            },
           },
           // Order: {
           //   status: 'PAID'
@@ -164,8 +171,11 @@ const OrderService = {
       const totalAmount = await prisma.order.aggregate({
         where: {
           createdAt: {
-            lt: getNextDay(new Date(data.date || new Date())),
-            gt: getPreviousDay(new Date(data.date || new Date())),
+            lte: getNextDay(new Date(data.date)),
+            gt: new Date(data.date),
+          },
+          riderId: {
+            not: 0,
           },
           // status: 'PAID'
         },
@@ -203,12 +213,12 @@ const OrderService = {
       by: ["createdAt"],
       where: {
         createdAt: {
-          gte: new Date(data.startDate || new Date()),
-          lte: new Date(data.endDate || new Date()),
+          gte: new Date(new Date(data.startDate || new Date()).setHours(0)),
+          lte: new Date(new Date(data.endDate || new Date()).setHours(24)),
         },
         riderId: {
-          not: 0
-        }
+          not: 0,
+        },
       },
       _count: {
         id: true,
@@ -238,7 +248,6 @@ const OrderService = {
         delete order[i]._sum;
       }
     }
-    console.log("getOrderOverviewByDate", order);
     return createResponse(order, true, "Order Overview Response");
   },
 
