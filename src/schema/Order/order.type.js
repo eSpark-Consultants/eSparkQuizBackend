@@ -8,6 +8,8 @@ const Order = gql`
     userId: Int
     totalAmount: Float
     User: User
+    riderId: Int
+    Rider: User
     status: ORDER_STATUS
     paidAmount: Int
     remainingAmount: Int
@@ -88,10 +90,10 @@ const Order = gql`
   }
 
   input updateOrderInput {
-      id: Int!
-      status: ORDER_STATUS!
-      paidAmount: Int!
-      riderId: Int!
+    id: Int!
+    status: ORDER_STATUS!
+    paidAmount: Int!
+    riderId: Int!
   }
 
   type Query {
@@ -99,7 +101,10 @@ const Order = gql`
     getOrderById(id: Int!): OrderResponse
     getCurrentRemainingAmount(userId: Int!): OrderResponse
     getOrderSummary(date: Date): OrderSummaryArrayResponse
-    getOrderOverviewByDate(startDate: Date!, endDate: Date!): OrderOverviewArrayResponse
+    getOrderOverviewByDate(
+      startDate: Date!
+      endDate: Date!
+    ): OrderOverviewArrayResponse
     orderPurchased: OrderResponse
   }
 
