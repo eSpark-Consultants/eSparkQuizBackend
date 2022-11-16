@@ -25,6 +25,7 @@ const orderResolver = {
               Item: true,
             },
           },
+          Rider: true
         }, //relations.order(),
         where: req ? req?.GetOrderInput : {},
       });
