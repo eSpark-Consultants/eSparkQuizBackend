@@ -50,6 +50,7 @@ function validateError(fields, data) {
 function requestPagination(cursor) {
   return cursor ? { skip: 1, cursor: { id: cursor } } : {};
 }
+
 function returnPagination(data, limit) {
   let nextCursor;
   const lastItem = data[limit - 1];
@@ -134,15 +135,14 @@ function genPassword() {
 
 function sortAlphebetically (users) {
     let data = users.reduce((r, e) => {
- 
         // get first letter of name of current element
-        let alphabet = e?.firstName[0];
+        let alphabet = e?.firstName[0]?.toUpperCase();
        
         // if there is no property in accumulator with this letter create it
-        if (!r[alphabet]) r[alphabet] = { alphabet, record: [e] }
+        if (!r[alphabet?.toUpperCase()]) r[alphabet?.toUpperCase()] = { alphabet, record: [e] }
        
         // if there is push current element to children array for that letter
-        else r[alphabet].record.push(e);
+        else r[alphabet?.toUpperCase()].record.push(e);
        
         // return accumulator
         return r;
