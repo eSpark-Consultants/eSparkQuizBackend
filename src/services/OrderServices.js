@@ -75,33 +75,21 @@ const OrderService = {
   async updateOrder(data) {
     if (data?.input?.length > 0) {
       const inputs = data?.input;
-      for (let index = 0; index < inputs?.length; index++) {
-        const isOrder = await prisma.order.findUnique({
-          where: {
-            id: inputs[index].id,
-          },
-        });
-        inputs[index]["remainingAmount"] =
-          inputs[index]?.paidAmount - isOrder.totalAmount;
-        try {
-          const result = await prisma.order.update({
-            where: {
-              id: inputs[index].id,
-            },
-            data: inputs[index],
-          });
-        } catch (error) {
-          console.log(error);
-          return createError(401, error);
-        }
-      }
       if (data?.type) {
         const order = await prisma.order.findUnique({
           where: {
             id: data?.input[0]?.id,
           },
         });
-
+        const isReturned = order.paidAmount - order.totalAmount - data?.returnAmount 
+        const orderUpate = await prisma.order.update({
+          where: {
+            id: order.id,
+          },
+          data: {
+            returned: isReturned == 0 ? true : false
+          }
+        })
         const user = await prisma.user.findUnique({
           where: {
             id: order.userId,
@@ -113,6 +101,30 @@ const OrderService = {
           "Amount Returned",
           "Your today's remaining amount is Returned"
         );
+      }else {
+        for (let index = 0; index < inputs?.length; index++) {
+          const isOrder = await prisma.order.findUnique({
+            where: {
+              id: inputs[index].id,
+            },
+          });
+          inputs[index]["remainingAmount"] =
+            inputs[index]?.paidAmount - isOrder.totalAmount;
+            if(inputs[index]["remainingAmount"] == 0) {
+              inputs[index]["returned"] = true;
+            }
+          try {
+            const result = await prisma.order.update({
+              where: {
+                id: inputs[index].id,
+              },
+              data: inputs[index],
+            });
+          } catch (error) {
+            console.log(error);
+            return createError(401, error);
+          }
+        }
       }
       return createResponse({}, true, "Order Updated Successfully");
     } else {

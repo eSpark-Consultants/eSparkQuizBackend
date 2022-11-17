@@ -20,7 +20,7 @@ model User {
   phoneNumber   String?
   country       String?
   city          String?
-  role          ROLES[]         
+  role          ROLES[]
   password      String          @default("")
   resetToken    String          @default("")
   status        Boolean         @default(true)
@@ -74,6 +74,7 @@ model Order {
   OrderItems      OrderItems[]
   paidAmount      Int          @default(0)
   remainingAmount Int          @default(0)
+  returned        Boolean      @default(false)
   userId          Int
   User            User         @relation("UserOrder", fields: [userId], references: [id], onDelete: Cascade)
   riderId         Int?

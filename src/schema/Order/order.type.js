@@ -110,7 +110,7 @@ const Order = gql`
 
   type Mutation {
     createOrder(input: OrderInput!): OrderResponse
-    updateOrder(input: [updateOrderInput], type: ORDER_UPDATE): OrderResponse
+    updateOrder(input: [updateOrderInput], type: ORDER_UPDATE, returnAmount: Int): OrderResponse
   }
 
   enum ORDER_STATUS {
