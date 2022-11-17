@@ -48,7 +48,7 @@ model Item {
   image         String
   price         Int
   categoryId    Int
-  Category      Category        @relation(fields: [categoryId], references: [id])
+  Category      Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   OrderItems    OrderItems[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -58,9 +58,9 @@ model Item {
 model OrderItems {
   id        Int      @id @default(autoincrement())
   itemId    Int
-  Item      Item     @relation(fields: [itemId], references: [id])
+  Item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   orderId   Int
-  Order     Order    @relation(fields: [orderId], references: [id])
+  Order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   quantity  Int
   amount    Float
   note      String?
@@ -75,9 +75,9 @@ model Order {
   paidAmount      Int          @default(0)
   remainingAmount Int          @default(0)
   userId          Int
-  User            User         @relation("UserOrder", fields: [userId], references: [id])
+  User            User         @relation("UserOrder", fields: [userId], references: [id], onDelete: Cascade)
   riderId         Int?
-  Rider           User?        @relation(name: "RiderOrder", fields: [riderId], references: [id])
+  Rider           User?        @relation(name: "RiderOrder", fields: [riderId], references: [id], onDelete: Cascade)
   status          ORDER_STATUS @default(UNPAID)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -86,9 +86,9 @@ model Order {
 model FavoriteItems {
   id        Int      @id @default(autoincrement())
   itemId    Int
-  Item      Item     @relation(fields: [itemId], references: [id])
+  Item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   userId    Int
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
