@@ -16,6 +16,7 @@ const Order = gql`
     createdAt: Date
     updatedAt: Date
     OrderItems: [OrderItems]
+    returned: Boolean
   }
 
   type OrderSummary {
@@ -110,7 +111,11 @@ const Order = gql`
 
   type Mutation {
     createOrder(input: OrderInput!): OrderResponse
-    updateOrder(input: [updateOrderInput], type: ORDER_UPDATE, returnAmount: Int): OrderResponse
+    updateOrder(
+      input: [updateOrderInput]
+      type: ORDER_UPDATE
+      returnAmount: Int
+    ): OrderResponse
   }
 
   enum ORDER_STATUS {
