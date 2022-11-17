@@ -139,9 +139,7 @@ const OrderService = {
           lt: getNextDay(),
           gt: getPreviousDay(),
         },
-        remainingAmount: {
-          gt: 0,
-        },
+        returned: false,
         userId: data?.userId,
       },
     });
