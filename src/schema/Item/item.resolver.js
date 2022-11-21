@@ -1,13 +1,13 @@
 const { prisma } = require("../../database");
 const ItemServices = require("../../services/ItemServices");
-const { createResponse } = require("../../utils/helperFunctions");
+const { createResponse, mergePaginationRecord } = require("../../utils/helperFunctions");
 
 const ItemResolver = {
   Query: {
     getAllItems: async (args, req, context) => {
       try {
         const responseData = await ItemServices.getAllItems(req);
-        return responseData;
+        return mergePaginationRecord(responseData);
       } catch (error) {
         return createError(401, error);
       }

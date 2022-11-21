@@ -164,6 +164,7 @@ async function getUserFcmTokens() {
   const tokens = users.map((val) => val?.fcmToken);
   return tokens
 }
+
 module.exports = {
   createResponse,
   createError,

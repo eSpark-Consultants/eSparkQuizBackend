@@ -26,7 +26,17 @@ const Item = gql`
     status: Boolean
     message: String
     data: [Item]
+    pagination: PaginationResponse
     error: String
+  }
+
+  input PaginationInput {
+    limit: Int
+    cursor: Int
+  }
+
+  type PaginationResponse {
+    nextCursor: Int
   }
 
   input where {
@@ -34,7 +44,7 @@ const Item = gql`
   }
 
   type Query {
-    getAllItems(where: where): ItemArrayResponse
+    getAllItems(where: where, pagination: PaginationInput): ItemArrayResponse
     getItemById(id: Int!): ItemResponse
     searchItem(text: String): ItemArrayResponse
   }

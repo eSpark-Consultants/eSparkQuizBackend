@@ -4,18 +4,23 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const { signAccessToken } = require("../utils/jwt.js");
 const SendMail = require("./emailServices.js");
-const { createError, createResponse } = require("../utils/helperFunctions.js");
+const { createError, createResponse, requestPagination, returnPagination } = require("../utils/helperFunctions.js");
 
 const ItemServices = {
   async getAllItems(data) {
+    const pagination = requestPagination(data?.pagination?.cursor);
     try {
       const responseData = await prisma.item.findMany({
+        take: data?.pagination?.limit || 10,
         where: data?.where,
         include: {
           Category: true,
-        }
+        },
+        ...pagination,
+        orderBy: { id: "desc" },
       });
-      return createResponse(responseData, true, "All Items");
+      return createResponse(responseData, true, "All Items",200, returnPagination(responseData, data?.pagination?.limit)
+      );
     } catch (error) {
       return createError(401, error);
     }
