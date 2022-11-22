@@ -9,6 +9,7 @@ const Result = gql`
     userId: Int
     User: User
     totalScore: Int
+    percentage:  String
     questions: [Question]
     createdAt: Date
     updatedAt: Date
