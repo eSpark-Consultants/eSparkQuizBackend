@@ -11,16 +11,10 @@ const UserResolver = {
     },
     getAllUsers: async (args, req, context) => {
       const obj = {...req?.where}
-      if(req?.where?.role) {
-        obj['role'] = {
-          has: req?.where?.role
-        }
-        delete req.where.role
-      }
       const response = await prisma.user.findMany({
         where: req?.where ? obj : {}
       });
-      return createResponse(sortAlphebetically(response), true, "All users");
+      return createResponse(response, true, "All users");
     },
     getUserById: async (args, req, context) => {
       const response = await prisma.user.findUnique({

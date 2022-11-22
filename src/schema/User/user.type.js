@@ -14,7 +14,6 @@ const User = gql`
     phoneNumber: String
     country: String
     city: String
-    role: [ROLES!]!
     password: String
     resetToken: String
     status: Boolean
@@ -39,11 +38,10 @@ const User = gql`
   type UserArrayResponse {
     status: Boolean
     message: String
-    data: [AlphabeticalResponse]
+    data: [User]
   }
 
   input Input {
-    role: ROLES
     status: Boolean
   }
   type Query {
@@ -57,12 +55,11 @@ const User = gql`
       firstName: String!
       lastName: String!
       email: String!
-      password: String
-      role: [ROLES!]!
+      password: String!
       fcmToken: String
     ): UserResponse
 
-    forgotPassword(email: String!, role: [ROLES!]!): UserResponse
+    forgotPassword(email: String!): UserResponse
 
     changePassword(
       id: Int!
@@ -82,7 +79,6 @@ const User = gql`
 
     updateProfile(
       id: Int!
-      role: [ROLES!]
       firstName: String
       lastName: String
       avatar: String

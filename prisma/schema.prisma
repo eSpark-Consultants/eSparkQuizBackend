@@ -10,88 +10,34 @@ generator client {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  email         String?         @unique
-  firstName     String?
-  lastName      String?
-  userName      String?
-  avatar        String?
-  dob           DateTime?
-  phoneNumber   String?
-  country       String?
-  city          String?
-  role          ROLES[]
-  password      String          @default("")
-  resetToken    String          @default("")
-  status        Boolean         @default(true)
-  isVerified    Boolean         @default(true)
-  fcmToken      String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  FavoriteItems FavoriteItems[]
-  Orders        Order[]         @relation("UserOrder")
-  RiderOrder    Order[]         @relation("RiderOrder")
+  id          Int       @id @default(autoincrement())
+  email       String?   @unique
+  firstName   String?
+  lastName    String?
+  userName    String?
+  avatar      String?
+  dob         DateTime?
+  phoneNumber String?
+  country     String?
+  city        String?
+  password    String    @default("")
+  resetToken  String    @default("")
+  status      Boolean   @default(true)
+  isVerified  Boolean   @default(true)
+  fcmToken    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Results     Results[]
 }
 
-model Category {
-  id        Int      @id @default(autoincrement())
-  name      String
-  image     String
-  Item      Item[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Item {
-  id            Int             @id @default(autoincrement())
-  name          String
-  image         String
-  price         Int
-  categoryId    Int
-  Category      Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  OrderItems    OrderItems[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  FavoriteItems FavoriteItems[]
-}
-
-model OrderItems {
-  id        Int      @id @default(autoincrement())
-  itemId    Int
-  Item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  orderId   Int
-  Order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  quantity  Int
-  amount    Float
-  note      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Order {
-  id              Int          @id @default(autoincrement())
-  totalAmount     Float
-  OrderItems      OrderItems[]
-  paidAmount      Int          @default(0)
-  remainingAmount Int          @default(0)
-  returned        Boolean      @default(false)
-  userId          Int
-  User            User         @relation("UserOrder", fields: [userId], references: [id], onDelete: Cascade)
-  riderId         Int?
-  Rider           User?        @relation(name: "RiderOrder", fields: [riderId], references: [id], onDelete: Cascade)
-  status          ORDER_STATUS @default(UNPAID)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-}
-
-model FavoriteItems {
-  id        Int      @id @default(autoincrement())
-  itemId    Int
-  Item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  userId    Int
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Results {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  User   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalScore  Int
+  questions   Json
+  createdAt   DateTime  @default(now())   
+  updatedAt   DateTime  @updatedAt
 }
 
 enum ROLES {
@@ -100,7 +46,3 @@ enum ROLES {
   ADMIN
 }
 
-enum ORDER_STATUS {
-  PAID
-  UNPAID
-}

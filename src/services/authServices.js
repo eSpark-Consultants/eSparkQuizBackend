@@ -16,10 +16,10 @@ const { relations } = require("../utils/relationsHelper");
 
 const AuthServices = {
   async createUser(data) {
-    const isValidate = await validateError(["email", "role", "firstName", "lastName"], data);
+    const isValidate = await validateError(["email","firstName", "lastName", "password"], data);
     if (isValidate) return isValidate;
-    data['password'] = genPassword()
-    var userData = {...data}
+    // data['password'] = genPassword()
+    // var userData = {...data}
     const user = await prisma.user.findUnique({
       where: { email: data.email },
     });
@@ -30,11 +30,11 @@ const AuthServices = {
       responseData = await prisma.user.create({
         data: data,
       });
-      SendMail(userData?.email, {
-        email: userData?.email,
-        password: userData?.password,
-        name: `${userData?.firstName} ${userData?.lastName}`
-      });
+      // SendMail(userData?.email, {
+      //   email: userData?.email,
+      //   password: userData?.password,
+      //   name: `${userData?.firstName} ${userData?.lastName}`
+      // });
       return createResponse(responseData, true, "Registration Successfully");
     } catch (error) {
       return createError(401, error);
