@@ -53,7 +53,7 @@ const Result = gql`
   type Mutation {
     createResult(
       userId: Int!
-      totalScore: Int!
+      # totalScore: Int!
       questions: [QuestionInput!]!
     ): ResultResponse
   }
