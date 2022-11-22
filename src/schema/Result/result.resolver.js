@@ -41,9 +41,9 @@ const ResultResolver = {
         req['totalScore'] = totalScore?.length
         req['percentage'] = percentage
         console.log("totalScore totalScore", req)
-        // const response = await prisma.results.create({
-        //   data: req,
-        // });
+        const response = await prisma.results.create({
+          data: req,
+        });
         return createResponse(response, true, "All Results");
       } catch (error) {
         return createError(401, error);
