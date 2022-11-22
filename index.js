@@ -1,29 +1,25 @@
 // index.js
 
 const { ApolloServer } = require("apollo-server-express")
-const { readFileSync } = require("fs");
-const path = require("path");
 const { prisma } = require("./src/database");
 const { application } = require("./src/schema/rootModule");
-const admin = require("firebase-admin");
 const { createServer } = require('http');
 const express = require("express");
-const { env } = require("process");
 
 const app = express();
 const httpServer = createServer(app);
 const schema = application.createSchemaForApollo()
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+// const PRIVATE_KEY = process.env.PRIVATE_KEY
 
-admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId: process.env?.PROJECT_ID,
-    privateKey: PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    clientEmail: process.env?.FIREBASE_CLIENT_EMAIL,
-  }),
-  // databaseURL: process.env.DATABASE_URL
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert({
+//     projectId: process.env?.PROJECT_ID,
+//     privateKey: PRIVATE_KEY?.replace(/\\n/g, '\n'),
+//     clientEmail: process.env?.FIREBASE_CLIENT_EMAIL,
+//   }),
+//   // databaseURL: process.env.DATABASE_URL
+// });
 
 
 const server = new ApolloServer({
