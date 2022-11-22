@@ -32,9 +32,18 @@ const ResultResolver = {
   Mutation: {
     createResult: async (args, req) => {
       try {
-        const response = await prisma.results.create({
-          data: req,
-        });
+        const totalScore = req?.questions?.filter(value => {
+          return value?.selectedAnswer == value?.answer
+        })
+        const totalQuestions = req?.questions?.length
+        const correctAnswer =  totalScore?.length
+        const percentage = `${(correctAnswer/totalQuestions)*100}%`
+        req['totalScore'] = totalScore?.length
+        req['percentage'] = percentage
+        console.log("totalScore totalScore", req)
+        // const response = await prisma.results.create({
+        //   data: req,
+        // });
         return createResponse(response, true, "All Results");
       } catch (error) {
         return createError(401, error);
