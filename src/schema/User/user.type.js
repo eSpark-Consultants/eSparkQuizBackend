@@ -14,7 +14,6 @@ const User = gql`
     phoneNumber: String
     country: String
     city: String
-    role: ROLES
     password: String
     resetToken: String
     status: Boolean
@@ -31,27 +30,36 @@ const User = gql`
     error: String
   }
 
+  type AlphabeticalResponse {
+    alphabet: String
+    record: [User]
+  }
+  
   type UserArrayResponse {
     status: Boolean
     message: String
     data: [User]
   }
 
+  input Input {
+    status: Boolean
+  }
   type Query {
-    getAllUsers: UserArrayResponse
+    getAllUsers(where: Input): UserArrayResponse
     loginUser(email: String, password: String, fcmToken: String): UserResponse
     getUserById(id: Int): UserResponse
   }
 
   type Mutation {
     createUser(
+      firstName: String!
+      lastName: String!
       email: String!
       password: String!
-      role: ROLES
       fcmToken: String
     ): UserResponse
 
-    forgotPassword(email: String!, role: ROLES!): UserResponse
+    forgotPassword(email: String!): UserResponse
 
     changePassword(
       id: Int!
@@ -71,7 +79,6 @@ const User = gql`
 
     updateProfile(
       id: Int!
-      role: ROLES
       firstName: String
       lastName: String
       avatar: String
